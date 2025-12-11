@@ -1,0 +1,90 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Product {
+  id            Int           @id @default(autoincrement())
+
+  title         String
+  subtitle      String?
+  description   String
+
+  price         Int                 // stored in cents
+  discount      Int?                // stored in cents
+
+  quantity      Int
+  pictureUrl    String?
+
+  orderItems    OrderItem[]
+
+  isActive      Boolean       @default(true)
+
+  createAt      DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+}
+
+model Order {
+  id            Int           @id @default(autoincrement())
+
+  // Customer info
+  email         String
+  phone         String?
+  fullName      String
+  addressLine1  String
+  addressLine2  String?
+  city          String
+  province      String
+  postalCode    String
+  country       String
+
+  // Financials
+  subtotal      Int
+  shipping      Int
+  total         Int
+
+  status        OrderStatus   @default(PENDING)
+
+  // Relationships
+  items         OrderItem[]
+
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+}
+
+model OrderItem {
+  id            Int           @id @default(autoincrement())
+
+  order         Order         @relation(fields: [orderId], references: [id])
+  orderId       Int
+
+  product       Product       @relation(fields: [productId], references: [id])
+  productId     Int
+
+  // Snapshot of product info at purchase time
+  title         String
+  price         Int
+  quantity      Int
+  discount      Int?
+
+  lineTotal     Int                 // (price - discount) * quantity
+}
+
+enum OrderStatus {
+  PENDING       // waiting for Stripe webhook
+  PAID          // payment confirmed
+  PREPARING     // admin preparing order for shipping
+  SHIPPED       // order shipped
+  CANCELLED     // order cancelled (payment failed or manually cancelled) - pending refund
+  REFUNDED      // order cancelled and refund has been issued
+}
