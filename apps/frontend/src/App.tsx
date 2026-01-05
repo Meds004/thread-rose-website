@@ -18,7 +18,7 @@ function App() {
         <Route path='products' element={<ProductsPage />} />
         <Route path='cart' element={<CartPage />} />
         <Route path='customs' element={<CustomOrdersPage />} />
-        <Route path='dashboard' element={<DashboardPage/>} />
+        <Route path='admin' element={<DashboardPage/>} />
         <Route path='*' element={<NotFoundPage />} />
       </Route>
     </Routes>
