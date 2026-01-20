@@ -37,6 +37,18 @@ router.post("/login", async (req, res) => {
   res.json({ message: "Logged in" })
 })
 
+// ----------------------
+// POST /api/admin/logout
+// ----------------------
+router.post("/logout", (req, res) => {
+  res.clearCookie("admin.sid", {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production"
+  })
+
+  return res.sendStatus(200)
+})
 
 // ---------------------
 // GET /api/admin/me
