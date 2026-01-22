@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { useAdminAuth } from "../../hooks/useAdminAuth"
+import type { Admin } from "../../context/AdminAuthContext"
 
 export function AdminLogin() {
   const [username, setUsername] = useState("")
@@ -39,9 +40,8 @@ export function AdminLogin() {
         throw new Error("Invalid credentials")
       }
 
-      // Pull fresh admin session from backend
-      await refreshAdmin()
-      navigate("/admin")
+      const adminData: Admin = await res.json()
+      await refreshAdmin(adminData)
     } catch (err) {
       setError((err as Error).message)
     } finally {
@@ -58,7 +58,7 @@ export function AdminLogin() {
 
         <div className="space-y-4">
           <input
-            className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:ring-blue-500"
+            className="w-full border border-gray-300 rounded-full px-3 py-2 focus:outline-none focus:ring focus:ring-blue-500"
             type="text"
             placeholder="Username"
             value={username}
@@ -67,7 +67,7 @@ export function AdminLogin() {
           />
 
           <input
-            className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:ring-blue-500"
+            className="w-full border border-gray-300 rounded-full px-3 py-2 focus:outline-none focus:ring focus:ring-blue-500"
             type="password"
             placeholder="Password"
             value={password}
@@ -78,7 +78,7 @@ export function AdminLogin() {
           {error && <p className="text-red-600">{error}</p>}
 
           <button 
-            className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
+            className="w-full bg-black text-white py-2 rounded-full hover:bg-gray-800 transition"
             disabled={loading}
           >
             {loading ? "Logging in..." : "Login"}

@@ -34,7 +34,7 @@ model Product {
   discount      Int?                // stored in cents
 
   quantity      Int
-  pictureUrl    String?
+  images        ProductImage[]
 
   orderItems    OrderItem[]
 
@@ -42,6 +42,17 @@ model Product {
 
   createAt      DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
+}
+
+model ProductImage {
+  id            Int           @id @default(autoincrement())
+  url           String
+  publicId      String?
+  altText       String?
+  isPrimary     Boolean       @default(false)
+
+  productId     Int
+  product       Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 }
 
 model Order {

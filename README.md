@@ -22,3 +22,5 @@ Reports will be generated for the site owner with sales and other statistics.
 ### Other
 * Docker
 * Postman
+* Cloudinary (free-tier image storage, potentially moving to S3 later)
+

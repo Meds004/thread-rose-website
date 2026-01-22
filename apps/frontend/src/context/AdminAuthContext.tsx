@@ -9,7 +9,7 @@ export interface AdminAuthContextType {
   admin: Admin | null
   loading: boolean
   isAuthenticated: boolean
-  refreshAdmin: () => Promise<void>
+  refreshAdmin: (admin?: Admin) => Promise<void>
   logout: () => Promise<void>
   adminFetch: (
     input: RequestInfo,
