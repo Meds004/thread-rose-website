@@ -23,20 +23,24 @@ export function AdminAuthProvider({ children }: { children: React.ReactNode }) {
     return res
   }
 
-  async function refreshAdmin() {
+  async function refreshAdmin(admin?: Admin) {
+    if (admin) {
+      setAdmin(admin)
+      return
+    }
+
     try {
       const res = await adminFetch(
         "http://localhost:4000/api/admin/me",
-        {
-          headers: {
-            "Content-Type": "application/json",
-          }
-        }
+        // {
+        //   headers: {
+        //     "Content-Type": "application/json",
+        //   }
+        // }
       )
-
       const data = await res.json()
       setAdmin(data)
-    } catch {
+    } catch (error) {
       setAdmin(null)
     } finally {
       setLoading(false)

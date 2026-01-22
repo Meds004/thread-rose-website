@@ -1,23 +1,14 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { useAdminAuth } from "../../hooks/useAdminAuth"
-
-function SalesStats() {
-  return <div className="p-4">Sales statistics content</div>
-}
-
-function Orders() {
-  return <div className="p-4">View / modify orders</div>
-}
-
-function Products() {
-  return <div className="p-4">Add / remove /modify products</div>
-}
+import OrdersTab from "./dashboard/OrdersTab"
+import ProductsTab from "./dashboard/products/ProductsTab"
+import SalesTab from "./dashboard/SalesTab"
 
 const TABS = [
-  { id: "sales", label: "Sales Stats", component: SalesStats },
-  { id: "orders", label: "Orders", component: Orders },
-  { id: "products", label: "Products", component: Products }
+  { id: "sales", label: "Sales Stats", component: SalesTab },
+  { id: "orders", label: "Orders", component: OrdersTab },
+  { id: "products", label: "Products", component: ProductsTab }
 ]
 
 export function AdminDashboard() {

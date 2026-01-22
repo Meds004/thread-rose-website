@@ -34,7 +34,11 @@ router.post("/login", async (req, res) => {
     username: admin.username
   }
 
-  res.json({ message: "Logged in" })
+  // Return Admin object.
+  res.json({ 
+    id: admin.id,
+    username: admin.username
+   })
 })
 
 // ----------------------
@@ -47,7 +51,7 @@ router.post("/logout", (req, res) => {
     secure: process.env.NODE_ENV === "production"
   })
 
-  return res.sendStatus(200)
+  return res.status(200).json({ success: true, message: "Logged out" });
 })
 
 // ---------------------

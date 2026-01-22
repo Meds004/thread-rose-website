@@ -53,6 +53,11 @@ export type Session = Prisma.SessionModel
  */
 export type Product = Prisma.ProductModel
 /**
+ * Model ProductImage
+ * 
+ */
+export type ProductImage = Prisma.ProductImageModel
+/**
  * Model Order
  * 
  */
