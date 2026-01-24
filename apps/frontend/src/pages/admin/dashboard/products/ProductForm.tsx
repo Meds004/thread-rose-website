@@ -188,7 +188,7 @@ export default function ProductForm({
             checked:bg-black checked:border-black
             cursor-pointer transition-all relative
             after:content-[''] after:absolute after:opacity-0 checked:after:opacity-100
-            after:left-[5px] after:top-[1px] after:w-[6px] after:h-[10px] 
+            after:left-[5px] after:top-px after:w-1.5 after:h-2.5
             after:border-white after:border-r-2 after:border-b-2 after:rotate-45
           "
         />
