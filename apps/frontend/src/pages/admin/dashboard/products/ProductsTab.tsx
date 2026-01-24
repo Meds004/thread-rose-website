@@ -22,7 +22,7 @@ export default function ProductsTab() {
 
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  // const [error, setError] = useState<string | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
 
   useEffect(() => {
@@ -72,7 +72,7 @@ export default function ProductsTab() {
   }
 
   if (loading) return <p>Loading products...</p>
-  if (error) return <p className="text-red-600">{error}</p>
+  // if (error) return <p className="text-red-600">{error}</p>
 
   return (
     <div className="space-y-4">

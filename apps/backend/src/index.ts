@@ -4,53 +4,34 @@ import dotenv from "dotenv"
 import session from "express-session"
 import pg from "pg"
 import connectPgSimple = require("connect-pg-simple")
-import { prisma } from "./lib/prisma"
-import adminAuthRoutes from "./routes/adminAuth"
-import adminSecureRoutes from "./routes/adminSecure"
+
+// Routes
+import adminAuthRoutes from "./routes/adminAuth.routes"
+import adminSecureRoutes from "./routes/adminSecure.routes"
+import productRoutes from "./routes/product.routes"
 import { requireAdmin } from "./middleware/requireAdmin"
 
+dotenv.config()
 
-dotenv.config();
-
-// extend types for express-session
-declare module "express-session" {
-  interface SessionData {
-    admin?: {
-      id: number;
-      username: string;
-    };
-  }
+if (!process.env.SESSION_SECRET) {
+  throw new Error("SESSION_SECRET is missing from .env file")
 }
 
-
-// ---------------
-// Database Setup
-// ---------------
-const connectionString = `${process.env.DATABASE_URL}`
-
-// pg pool for sessions (separate from Prisma, intentionally)
-const pgPool = new pg.Pool({
-  connectionString
-})
-
-
-// ---------------
-// App Setup
-// ---------------
 const app = express()
 
+// Middleware
 app.use(cors({
-  origin: "http://localhost:5173", // frontend URL
+  origin: process.env.FRONTEND_URL || "http://localhost:5173",
   credentials: true
 }))
 
 app.use(express.json());
 
-
-// ---------------
-// Session Setup
-// ---------------
+// Session setup
 const PgSession = connectPgSimple(session)
+const pgPool = new pg.Pool({
+  connectionString: process.env.DATABASE_URL
+})
 
 app.use(
   session({
@@ -71,36 +52,16 @@ app.use(
   })
 )
 
-// Public admin routes
+// Routes
 app.use("/api/admin", adminAuthRoutes)
-
-// Protected admin routes
 app.use("/api/admin/secure", requireAdmin, adminSecureRoutes)
+app.use("/api/products", productRoutes)
+
+app.get("/health", (_req, res) => res.json({ status: "ok" }))
 
 
-// ---------------
-// Health Checks
-// ---------------
-app.get("/health", (_req, res) => {
-  res.json({ status: "ok" });
-});
-
-app.get("/health/db", async (_req, res) => {
-  try {
-    const result = await prisma.$queryRaw<{ now: Date }[]>`SELECT NOW() AS now;`;
-    res.json({ dbTime: result[0].now });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Database connection failed" });
-  }
-});
-
-
-// ---------------
 // Server Start
-// ---------------
 const PORT = process.env.PORT || 4000;
-
 app.listen(PORT, () => {
   console.log(`Backend running on http://localhost:${PORT}`);
 });
